@@ -5,11 +5,13 @@ const format = 'MM/DD/YYYY'
 const validDate = st =>
   /(\d\d)\/(\d\d)\/(\d\d\d\d)/g.test(st) && moment(st, format).isValid()
 
-const checkDates = (oneWaySt, returnSt) => {
+const checkDates = (oneWaySt, returnSt, type) => {
+  if(type === 'one-way') return validDate(oneWaySt)
+
   const oneWayMoment = moment(oneWaySt, format)
   const returnMoment = moment(returnSt, format)
-  return oneWayMoment.isValid() 
-    && returnMoment.isValid() 
+  return validDate(oneWaySt)
+    && validDate(returnSt)
     && !returnMoment.isBefore(oneWayMoment)
 }
 
@@ -28,7 +30,7 @@ class FlightBooker extends Component {
     this.setState({
       oneWay:  string,
       oneWayValid: validDate(string),
-      valid: checkDates(string, this.state.return)
+      valid: checkDates(string, this.state.return, this.state.type)
     })
   }
   setReturn = (ev) => {
@@ -36,7 +38,7 @@ class FlightBooker extends Component {
     this.setState({
       return: string,
       returnValid: validDate(string),
-      valid: checkDates(this.state.oneWay, string)
+      valid: checkDates(this.state.oneWay, string, this.state.type)
     })
   }
   selectType = (ev) => {
@@ -44,8 +46,13 @@ class FlightBooker extends Component {
     if(type === 'roundtrip') {
       this.returnInput.disabled = false
       this.returnInput.focus()
+    } else {
+      this.returnInput.disabled = true
     }
-    this.setState({type})
+    this.setState({
+      type,
+      valid: checkDates(this.state.oneWay, this.state.return, type)
+    })
   }
   submit = (ev) => {
     ev.preventDefault()
@@ -63,13 +70,13 @@ class FlightBooker extends Component {
           </select>
           <div>
             <input value={this.state.oneWay} 
-              style={{borderColor: this.state.oneWayValid ? '' : 'red'}}
+              style={{borderColor: this.state.oneWayValid ? '' : 'tomato'}}
               onChange={this.setOneWay} type='text' />
           </div>
           <div>
             <input value={this.state.return} 
               disabled={this.state.type !== 'return'}
-              style={{borderColor: this.state.returnValid ? '' : 'red'}}
+              style={{borderColor: this.state.returnValid ? '' : 'tomato'}}
               ref={(input) => {this.returnInput = input}}
               onChange={this.setReturn} type='text' />
           </div>

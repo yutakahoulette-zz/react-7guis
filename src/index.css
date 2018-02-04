@@ -1,0 +1,32 @@
+@import '../node_modules/tachyons/css/tachyons.css';
+
+:root {
+  --grey-1: #d6d6d6;
+}
+
+:disabled {
+  opacity: 0.6;
+}
+
+section {
+  border: 1px solid var(--grey-1);
+  padding: 1rem;
+  margin-bottom: 3rem;
+}
+
+.progressBar {
+  border-radius: .5rem;
+  overflow: auto;
+  height: .5rem;
+  width: 200px;
+  background: var(--grey-1);
+  position: relative;
+}
+
+.progressBar-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: blue;
+}
