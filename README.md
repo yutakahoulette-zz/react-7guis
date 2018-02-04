@@ -4,7 +4,8 @@ https://github.com/eugenkiss/7guis/wiki#flight-booker
 
 - [x] counter
 - [x] temperature converter
-- [ ] flight booker
-
-
-
+- [x] flight booker
+- [x] timer
+- [ ] CRUD
+- [ ] circle drawer
+- [ ] cells
