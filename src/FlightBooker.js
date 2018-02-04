@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import moment from 'moment'
 
-const format = 'MM-DD-YYYY'
-const validDate = st => moment(st, format).isValid()
+const format = 'MM/DD/YYYY'
+const validDate = st =>
+  /(\d\d)\/(\d\d)\/(\d\d\d\d)/g.test(st) && moment(st, format).isValid()
 
 const checkDates = (oneWaySt, returnSt) => {
-  console.log({oneWaySt, returnSt})
   const oneWayMoment = moment(oneWaySt, format)
   const returnMoment = moment(returnSt, format)
   return oneWayMoment.isValid() 
@@ -20,7 +20,8 @@ class FlightBooker extends Component {
     oneWayValid: true,
     returnValid: true,
     oneWay: moment().format(format),
-    return: moment().format(format)
+    return: moment().format(format),
+    msg: ''
   }
   setOneWay = (ev) => {
     const string = ev.target.value
@@ -40,20 +41,25 @@ class FlightBooker extends Component {
   }
   selectType = (ev) => {
     const type = ev.target.value
-    if(type === 'return') {
+    if(type === 'roundtrip') {
       this.returnInput.disabled = false
       this.returnInput.focus()
     }
     this.setState({type})
   }
+  submit = (ev) => {
+    ev.preventDefault()
+    const msg = `You have booked a ${this.state.type} flight on ${this.state.oneWay}${this.state.type === 'roundtrip' ? (' returning on ' + this.state.return) : ''}.`
+    this.setState({msg})
+  }
   render() {
     return (
       <section>
         <h2>Flight Booker</h2>
-        <form>
+        <form onSubmit={this.submit}>
           <select onChange={this.selectType} value={this.state.type}>
-            <option name='one-way'>one-way flight</option>
-            <option name='return'>return</option>
+            <option value='one-way'>one-way flight</option>
+            <option value='roundtrip'>roundtrip flight</option>
           </select>
           <div>
             <input value={this.state.oneWay} 
@@ -69,7 +75,7 @@ class FlightBooker extends Component {
           </div>
           <button disabled={!this.state.valid}>Book</button>
         </form>
-        
+        {this.state.msg ? <p>{this.state.msg}</p> : ''}
       </section>
     )
   }
