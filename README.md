@@ -6,6 +6,6 @@ https://github.com/eugenkiss/7guis/wiki
 - [x] temperature converter
 - [x] flight booker
 - [x] timer
-- [ ] CRUD
+- [x] CRUD
 - [ ] circle drawer
 - [ ] cells

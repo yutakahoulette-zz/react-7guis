@@ -7,11 +7,8 @@ class Crud extends Component {
     editing: false,
     persons: [],
     error: '',
-    person: {
-      firstName: '',
-      lastName: '',
-      id: ''
-    }
+    filter: '',
+    person: {}
   }
 
   create = (ev) => {
@@ -23,11 +20,7 @@ class Crud extends Component {
     this.setState({
       persons: persons.concat([person]),
       error: '',
-      person: {
-        firstName: '',
-        lastName: '',
-        id: ''
-      }
+      person: {},
     })
   }
 
@@ -36,18 +29,18 @@ class Crud extends Component {
     if (!this.validPerson()) return
     this.setState({
       editing: false,
-      person: {
-        firstName: '',
-        lastName: '',
-        id: ''
-      }
+      person: {}
     })
   }
 
   delete = (id) => (ev) => {
     let {index, persons} = this.getPersonsAndIndex(id)
     persons.splice(index, 1)
-    this.setState({persons})
+    this.setState({
+      persons,
+      editing: false,
+      person: {}
+    })
   }
 
   validPerson = () => {
@@ -82,23 +75,38 @@ class Crud extends Component {
     })
   }
 
+  setFilter = (ev) => {
+    const filter = ev.target.value.trim().toLowerCase()
+    this.setState({filter})
+  }
+
   render() {
+    const firstName = this.state.person.firstName || ''
+    const lastName = this.state.person.lastName || ''
     return (
       <section>
         <h2>CRUD</h2>
+        {this.state.persons.length 
+          ?
+            <div>
+              <label>Filter</label>
+              <input onChange={this.setFilter} value={this.state.filter} type='text'/>
+            </div>
+          : ''
+        }
         <form onSubmit={this.state.editing ? this.update : this.create}>
           <label>First name</label>
-          <input onChange={this.setPerson('firstName')} value={this.state.person.firstName} type='text'/>
+          <input onChange={this.setPerson('firstName')} value={firstName} type='text'/>
           <br/>
           <label>Last name</label>
-          <input onChange={this.setPerson('lastName')} value={this.state.person.lastName} type='text'/>
+          <input onChange={this.setPerson('lastName')} value={lastName} type='text'/>
           <br/>
           <button>{this.state.editing ? 'Update' : 'Create'}</button>
         </form>
         {this.state.error ? <p>{this.state.error}</p> : ''}
         <ul>
           {this.state.persons.map(({id, firstName, lastName}) => 
-            <li key={id}>
+            <li key={id} style={{color: this.state.filter === lastName.toLowerCase() ? 'tomato' : 'black'}} >
               {lastName}, {firstName}
               <button onClick={this.setEditing(id)}>Edit</button>
               <button onClick={this.delete(id)}>Delete</button>
