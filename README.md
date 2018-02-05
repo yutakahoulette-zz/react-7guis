@@ -1,6 +1,6 @@
 # React 7GUIs
 
-https://github.com/eugenkiss/7guis/wiki#flight-booker
+https://github.com/eugenkiss/7guis/wiki
 
 - [x] counter
 - [x] temperature converter
